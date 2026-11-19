@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240">
+<defs><pattern id="d" width="8" height="8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="#B7791F" opacity=".45"/><circle cx="6" cy="6" r="1.6" fill="#fff" opacity=".35"/></pattern></defs>
+<path d="M50 36 H200 V96 H118 V112 H182 V164 H118 V214 H50 Z" fill="#000" opacity=".18" transform="translate(4 6)"/>
+<path d="M50 30 H200 V90 H118 V106 H182 V158 H118 V208 H50 Z" fill="#121316"/>
+<path d="M62 42 H188 V78 H106 V118 H170 V146 H106 V196 H62 Z" fill="#fff"/>
+<path d="M74 54 H176 V66 H94 V124 H158 V138 H94 V184 H74 Z" fill="#FFC93C"/>
+<path d="M74 54 H176 V66 H94 V124 H158 V138 H94 V184 H74 Z" fill="url(#d)"/>
+</svg>

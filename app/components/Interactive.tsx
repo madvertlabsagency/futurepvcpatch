@@ -155,7 +155,7 @@ export function HeroQuiz({ types, id, className = '' }: { types: { label: string
         <span className="hq-time">Takes about 60 seconds</span>
       </div>
       <div className="hq-bar" aria-hidden="true"><span /></div>
-      <h2 id={id} className="hd hq-title">What would you like us to make?</h2>
+      <h2 id={id} className="hd hq-title">What type of patch do you need?</h2>
       <div className="hq-grid">
         {types.map((t) => (
           <a

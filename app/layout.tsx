@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: 'Future PVC Patch, Get a Free Quote',
   description:
-    'Custom 3D PVC patches, key chains and stickers designed by our team. Big orders, small prices, with worldwide shipping.',
+    'PVC, embroidered, chenille, woven and printed custom patches, plus key chains and stickers. Free mockup in 24 hours, free shipping, no minimum order and a money back guarantee.',
   icons: { icon: withBase('/assets/logo-160.webp') },
   openGraph: { title: 'Future PVC Patch, Get a Free Quote', images: [withBase('/assets/logo-og.png')] },
 };

@@ -422,7 +422,7 @@ export default function QuoteForm() {
 
         {f.step === 1 && (
           <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
-            <legend className="hd h3 mb">What would you like us to make?</legend>
+            <legend className="hd h3 mb">What type of patch do you need?</legend>
             <div className="ogrid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))' }}>
               {PATCH_TYPES.map((t) => (
                 <button key={t.key} type="button" className="opt tall" aria-pressed={f.type === t.label} onClick={() => pickType(t.label)}>

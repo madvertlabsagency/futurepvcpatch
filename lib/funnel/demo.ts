@@ -25,7 +25,7 @@ export const DEMO_ADS: AdDef[] = [
   { campaign_id: '120200002', campaign_name: 'Leadlink | Retarget visitors', adset_id: '120210003', adset_name: 'Site visitors 30 days', ad_id: '120220005', ad_name: 'Customer review card', daily: 8, ctr: 0.024, lpv: 0.86, perf: 1.25 },
 ];
 
-const TYPES = ['3D PVC Patch', '3D PVC Patch', '3D PVC Patch', 'PVC Keychain', 'PVC Keychain', 'Custom Sticker', 'Not sure'];
+const TYPES = ['Embroidered', 'Embroidered', 'PVC', 'PVC', 'Chenille', 'Woven', 'Sublimation', 'PVC Keychain', 'Not sure'];
 const QTYS = ['10 to 24', '25 to 49', '50 to 99', '50 to 99', '100 to 249', '100 to 249', '250 to 499', '500 to 999', '1,000+', 'Not sure yet'];
 const HOUR_WEIGHT = [1, 0.6, 0.4, 0.3, 0.3, 0.5, 1, 1.6, 2, 2.2, 2.3, 2.4, 2.6, 2.5, 2.4, 2.4, 2.6, 2.9, 3.3, 3.6, 3.7, 3.3, 2.5, 1.6];
 

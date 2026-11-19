@@ -32,8 +32,8 @@ const INCLUDED = [
 ];
 
 const WHY = [
-  ['3D PVC', 'Raised, dimensional rubber patches that stand out.'],
-  ['Durable', 'Tough rubber PVC built for jackets, caps, bags and gear.'],
+  ['Every style', 'PVC, embroidered, chenille, woven and printed patches.'],
+  ['Durable', 'Built to last on jackets, caps, bags and gear.'],
   ['Free shipping', 'We deliver to customers all over the world.'],
 ];
 
@@ -70,7 +70,7 @@ const FAQ: [string, string][] = [
   ['Are the mockup and shipping really free?', 'Yes. You get a free mockup within 24 hours, and shipping is free.'],
   ['What if I am not happy with my patches?', 'Every order comes with our money back guarantee. Tell us what is wrong and we make it right or give your money back.'],
   ['Can you design my patch for me?', 'Absolutely. Share your logo, sketch or idea and our design team creates a patch that matches your vision.'],
-  ['What can you make besides patches?', 'We make 3D PVC patches, PVC key chains, stickers, t-shirts and hoodies on custom demand.'],
+  ['Which patch styles do you make?', 'PVC, embroidered, chenille, woven and sublimation printed patches, plus PVC key chains and stickers. Not sure which fits? Pick Not sure in the quote form and we will recommend one.'],
   ['Do you ship to my country?', 'Yes. We deliver worldwide, and shipping is free.'],
   ['Is my payment safe?', 'Yes. We use advanced encryption and trusted payment gateways to keep your information safe and private.'],
   ['Do you offer discounts?', 'Yes. Bigger orders get better prices, and we run special offers and coupons. Ask about current deals with your quote.'],
@@ -118,14 +118,14 @@ export default function Page() {
           </svg>
           <div className="hero-grid wrap">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <span className="badge-dashed"><span className="i3 s28 i-check" aria-hidden="true" />Custom 3D PVC patches</span>
+              <span className="badge-dashed"><span className="i3 s28 i-check" aria-hidden="true" />PVC, embroidered, chenille, woven and printed</span>
               <h1 className="hd">
                 <span style={{ color: 'var(--navy)' }}>Premium Custom</span>
                 <span style={{ color: 'var(--teal)' }}>Patches For</span>
                 <span style={{ color: 'var(--red)' }}>Your Brand</span>
               </h1>
               <HeroQuiz types={quizTypes} id="hq-m" className="hq-mobile" />
-              <p className="hero-lead">Send your logo or idea and see a free mockup in 24 hours. Our design team turns it into a durable, premium patch. Free shipping and no minimum order, backed by our money back guarantee.</p>
+              <p className="hero-lead">Send your logo or idea and see a free mockup in 24 hours. Our design team turns it into a premium PVC, embroidered, chenille or woven patch. Free shipping and no minimum order, backed by our money back guarantee.</p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <a href="#quote" className="btn cta-main" data-cta="hero_quote">Get my free quote<Arrow /></a>
                 <UploadCta />
@@ -155,7 +155,7 @@ export default function Page() {
             <div className="reel-copy">
               <span className="eyebrow">Why Future PVC Patch</span>
               <h2 className="hd h2">Design It, Patch It And Promote</h2>
-              <p className="sub">We produce top quality products on custom demand: 3D PVC patches, key chains, stickers, t-shirts and hoodies. Simply give us your concept and our talented design team brings it to life. You see a free mockup within 24 hours, and shipping is free.</p>
+              <p className="sub">We produce top quality custom patches on demand: PVC, embroidered, chenille, woven and printed, plus key chains and stickers. Simply give us your concept and our talented design team brings it to life. You see a free mockup within 24 hours, and shipping is free.</p>
               <div className="dg-stats">
                 {WHY.map(([n, t]) => (
                   <div key={n}><strong className="hd">{n}</strong><span>{t}</span></div>
@@ -164,7 +164,7 @@ export default function Page() {
               <a href="#quote" className="btn cta-main" data-cta="why_quote" style={{ alignSelf: 'flex-start' }}>Get my free quote<Arrow /></a>
             </div>
             <div className="reel-frame why-photo">
-              <img src={withBase('/assets/art/hero-flatlay.webp')} alt="Custom patches laid out on a table" width={1080} height={1080} loading="lazy" decoding="async" />
+              <img src={withBase('/assets/art/hero-flatlay.webp')} alt="Embroidered, PVC, chenille, woven and printed custom patches laid out on a table" width={1080} height={1080} loading="lazy" decoding="async" />
             </div>
           </div>
         </section>
@@ -191,7 +191,7 @@ export default function Page() {
             <h2 className="hd h2">Pick Your Product</h2>
             <p className="sub" style={{ maxWidth: 560, marginBottom: 32 }}>Not sure which style fits? Choose Not sure in the quote form and our team will recommend the best option.</p>
             <div className="types-grid">
-              {['pvc', 'key', 'stk'].map((k) => {
+              {['pvc', 'emb', 'che', 'wov', 'sub', 'key', 'stk'].map((k) => {
                 const t = bySlug[k];
                 return (
                   <div className="type-card" key={k}>

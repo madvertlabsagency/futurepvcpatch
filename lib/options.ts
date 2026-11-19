@@ -2,9 +2,13 @@ import { withBase } from './base';
 // Funnel choices shared by the client form, the server validator and the PDF.
 // Copy rule: no em dashes or en dashes; use "to" for ranges.
 
-// Products listed on futurepvcpatch.com: 3D PVC patches, key chains, stickers (plus t-shirts and hoodies).
+// Same patch styles as the Billys funnel, plus PVC key chains and stickers from futurepvcpatch.com.
 export const PATCH_TYPES = [
-  { key: 'pvc', label: '3D PVC Patch', img: withBase('/assets/pvc.svg'), desc: 'Durable rubber PVC patches with raised 3D detail for gear, caps and jackets.' },
+  { key: 'pvc', label: 'PVC', img: withBase('/assets/pvc.svg'), desc: 'Durable 3D rubber patches that last outdoors.' },
+  { key: 'emb', label: 'Embroidered', img: withBase('/assets/embroidered.svg'), desc: 'Classic textured embroidery for uniforms, teams and brands.' },
+  { key: 'che', label: 'Chenille', img: withBase('/assets/chenille.svg'), desc: 'Premium varsity and streetwear style with a soft raised feel.' },
+  { key: 'wov', label: 'Woven', img: withBase('/assets/woven.svg'), desc: 'Fine detail and small text with a flat, crisp finish.' },
+  { key: 'sub', label: 'Sublimation', img: withBase('/assets/sublimation.svg'), desc: 'Full color printed patches for photos and detailed artwork.' },
   { key: 'key', label: 'PVC Keychain', img: withBase('/assets/keychain.svg'), desc: 'Your logo as a rubber PVC keychain, great for giveaways and merch.' },
   { key: 'stk', label: 'Custom Sticker', img: withBase('/assets/sticker.svg'), desc: 'Custom stickers to promote your brand, team or event.' },
   { key: 'uns', label: 'Not sure', img: '', desc: '' },

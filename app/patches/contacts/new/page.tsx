@@ -10,7 +10,7 @@ import css from '../../crm.module.css';
 export const metadata: Metadata = { title: 'Add contact | Madvert Labs Patches CRM', robots: { index: false } };
 export const dynamic = 'force-dynamic';
 
-const PATCH_TYPES = ['3D PVC Patch', 'PVC Keychain', 'Custom Sticker', 'Other'];
+const PATCH_TYPES = ['Embroidered', 'PVC', 'Woven', 'Chenille', 'Leather', 'Printed', 'PVC Keychain', 'Custom Sticker', 'Other'];
 
 export default async function NewContactPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const ctx = await requireCtx();
