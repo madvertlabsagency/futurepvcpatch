@@ -104,7 +104,7 @@ export async function emailCustomer(row: QuoteRow): Promise<void> {
   const subject = `Your ${BUSINESS.name} quote request ${row.verify_code}`;
   const html = `<div style="font-family:Arial,sans-serif;color:#0F1A3A;max-width:560px">
       <h2 style="margin:0 0 8px">Thanks ${escapeHtml(row.first_name)}, your quote request is in!</h2>
-      <p style="color:#55595F">Our patch team will send your quote on WhatsApp shortly. Your full request and artwork are attached as a PDF.</p>
+      <p style="color:#55595F">Our patch team will send your quote and free mockup within 24 hours. Your full request and artwork are attached as a PDF.</p>
       <table style="width:100%;border-collapse:collapse;font-size:15px">${rows}</table>
       ${waLink ? `<p style="margin:24px 0"><a href="${waLink}" style="background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:999px;display:inline-block">Chat with us on WhatsApp</a></p>` : ''}
       <p style="color:#55595F;font-size:13px">${escapeHtml(contactLine('. '))}.</p>
@@ -191,11 +191,11 @@ export async function nudgeUnverified(row: QuoteRow): Promise<void> {
   if (waLink) {
     await sendEmail({
       to: [row.email],
-      subject: `${row.first_name}, where should we send your quote?`,
+      subject: `${row.first_name}, where should we send your free mockup?`,
       html: `<div style="font-family:Arial,sans-serif;color:#0F1A3A;max-width:560px">
-        <h2 style="margin:0 0 8px">Your patch quote is being prepared</h2>
-        <p style="color:#55595F">Hi ${escapeHtml(row.first_name)}, we are working on your ${escapeHtml(row.quantity)} ${escapeHtml(row.patch_type)} order (quote ${row.verify_code}). The fastest way to get your price is WhatsApp. Tap below and press Send.</p>
-        <p style="margin:24px 0"><a href="${waLink}" style="background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:999px;display:inline-block">Get my quote on WhatsApp</a></p>
+        <h2 style="margin:0 0 8px">Your patch mockup is being prepared</h2>
+        <p style="color:#55595F">Hi ${escapeHtml(row.first_name)}, we are working on your ${escapeHtml(row.quantity)} ${escapeHtml(row.patch_type)} order (quote ${row.verify_code}). The fastest way to get your price and mockup is WhatsApp. Tap below and press Send.</p>
+        <p style="margin:24px 0"><a href="${waLink}" style="background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:999px;display:inline-block">Get my mockup on WhatsApp</a></p>
         <p style="color:#55595F;font-size:13px">Prefer email? Just reply to this message. ${escapeHtml(contactLine('. '))}.</p>
       </div>`,
     });

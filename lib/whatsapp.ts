@@ -11,7 +11,7 @@ export function welcomeMessage(firstName: string, quoteNumber: string): string {
     ``,
     `Your quote number is ${quoteNumber}. Attached is a PDF with your patch details and artwork.`,
     ``,
-    `A patch specialist will send your price here shortly.`,
+    `A patch specialist will send your price and free mockup here within 24 hours.`,
     ``,
     `Quick question so we can start right away: what will these patches go on (hats, jackets, uniforms, bags)? Just reply here.`,
   ].join('\n');

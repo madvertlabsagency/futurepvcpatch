@@ -42,15 +42,19 @@ export const DEFAULT_MAX_MB = 25;
 
 // Everything that names the business lives here. Fields left empty are hidden on the page,
 // in emails and in the quote PDF, so fill them in before launch.
-// Contact details are the ones published on futurepvcpatch.com (contact page and footer).
+// The phone number (also used for WhatsApp) comes from Vercel settings, so it can be set without a code
+// change: NEXT_PUBLIC_BUSINESS_PHONE (digits with country code, e.g. 15551234567) and
+// NEXT_PUBLIC_BUSINESS_PHONE_DISPLAY (e.g. +1 (555) 123-4567). Empty hides the phone everywhere.
 export const BUSINESS = {
   name: 'Future PVC Patch',
   nameUpper: 'FUTURE PVC PATCH',
   tagline: 'Design it, Patch it and Promote',
   codePrefix: 'FPP', // quote codes look like FPP-482913
-  phoneDisplay: '+92 307 658 8724',
-  phoneTel: '923076588724', // also the WhatsApp number
+  phoneDisplay: process.env.NEXT_PUBLIC_BUSINESS_PHONE_DISPLAY || '',
+  phoneTel: (process.env.NEXT_PUBLIC_BUSINESS_PHONE || '').replace(/\D/g, ''), // also the WhatsApp number
   email: 'futurepvcpatch@gmail.com',
+  website: 'https://futurepvcpatch.com',
+  websiteLabel: 'futurepvcpatch.com',
   address: '',
   trustpilotUrl: '', // review page link; the reviews block stays hidden until real reviews exist
 };

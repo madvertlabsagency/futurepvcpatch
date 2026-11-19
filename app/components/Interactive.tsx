@@ -174,7 +174,7 @@ export function HeroQuiz({ types, id, className = '' }: { types: { label: string
           </a>
         ))}
       </div>
-      <p className="hq-foot">Free quote. Worldwide shipping.</p>
+      <p className="hq-foot">Free mockup in 24 hours. No minimum order.</p>
     </div>
   );
 }

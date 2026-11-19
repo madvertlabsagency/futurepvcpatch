@@ -437,7 +437,7 @@ export default function QuoteForm() {
         {f.step === 2 && (
           <fieldset style={{ border: 0, margin: 0, padding: 0 }}>
             <legend className="hd h3">How many patches do you need?</legend>
-            <p className="hint">Big orders, small prices. Bigger orders get better pricing per patch.</p>
+            <p className="hint">No minimum order. Bigger orders get better pricing per patch.</p>
             <div className="ogrid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
               {QUANTITIES.map((q) => opt('qty', q))}
             </div>
@@ -518,7 +518,7 @@ export default function QuoteForm() {
               I don&apos;t have artwork yet, I need design help
             </label>
             <label className="fld" style={{ marginTop: 14 }}>
-              Email, so we can send your quote
+              Email, so we can send your free mockup
               <input className="inp" style={{ maxWidth: 440 }} type="email" autoComplete="email" placeholder="you@company.com" value={f.email} onChange={(e) => set('email', e.target.value)} {...inv('email')} />
             </label>
           </div>
@@ -561,7 +561,7 @@ export default function QuoteForm() {
                   </select>
                   <input className="inp" type="tel" autoComplete="tel-national" placeholder="(555) 123 4567" value={f.phone} onChange={(e) => set('phone', e.target.value)} {...inv('phone')} />
                 </span>
-                <span style={{ fontWeight: 400, fontSize: 13, color: 'var(--muted)' }}>We send your quote on WhatsApp. Another country? Pick its code, or type the full number starting with +.</span>
+                <span style={{ fontWeight: 400, fontSize: 13, color: 'var(--muted)' }}>We send your quote and mockup on WhatsApp. Another country? Pick its code, or type the full number starting with +.</span>
               </label>
             </div>
             <p style={{ margin: '18px 0 10px', fontWeight: 700, fontSize: 14 }} id="ct-l">How should we contact you?</p>
@@ -606,8 +606,8 @@ export default function QuoteForm() {
           ))}
         </div>
         <div className="incl">
-          <span>Why order with us:</span>
-          <span style={{ fontWeight: 400 }}>Custom design by our team, big order savings, secure payments and worldwide shipping.</span>
+          <span>Included with every order:</span>
+          <span style={{ fontWeight: 400 }}>Free mockup within 24 hours and free shipping. No minimum order, backed by our money back guarantee.</span>
         </div>
       </aside>
     </div>

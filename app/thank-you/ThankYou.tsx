@@ -56,7 +56,7 @@ export default function ThankYou() {
       <img src={withBase('/assets/logo-160.webp')} alt="" width={96} height={96} />
       <h1 className="hd" style={{ margin: '14px 0 8px', fontSize: 'clamp(28px, 3.6vw, 42px)' }}>Your Quote Request Is In!</h1>
       <p style={{ margin: '0 auto 22px', fontSize: 17, color: 'var(--muted)', maxWidth: 520 }}>
-        Thanks{last?.first ? ` ${last.first}` : ''}. Our patch team has received your project details and will send your quote on WhatsApp shortly.
+        Thanks{last?.first ? ` ${last.first}` : ''}. Our patch team has received your project details and will send your quote and free mockup within 24 hours.
       </p>
 
       {last && waLink && (
@@ -70,7 +70,7 @@ export default function ThankYou() {
             <>
               <strong style={{ fontSize: 20 }}>Last step: confirm your WhatsApp</strong>
               <p style={{ margin: '8px 0 16px', color: 'var(--muted)' }}>
-                Tap the button and press Send. We will reply right away with your quote details and PDF, and send your price there.
+                Tap the button and press Send. We will reply right away with your quote details and PDF, and send your mockup there.
               </p>
               <a href={waLink} target="_blank" rel="noopener" className="btn wa-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>

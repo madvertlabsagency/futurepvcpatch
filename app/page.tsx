@@ -5,9 +5,9 @@ import { HeroQuiz, PickTypeLink, StickyCta, UploadCta, ViewContentObserver } fro
 import { BUSINESS, PATCH_TYPES } from '@/lib/options';
 import { withBase } from '@/lib/base';
 
-// Claims come only from futurepvcpatch.com: custom design by their team, best quality, durable 3D PVC,
-// big orders small prices (bulk savings), worldwide shipping, secure payments, discounts and coupons.
-// Do not add free mockup, turnaround times, minimum order or guarantees until the client confirms them.
+// Offers confirmed by the client: free mockup in 24 hours, no minimum order, free shipping, money back guarantee.
+// From futurepvcpatch.com: custom design by their team, best quality, durable 3D PVC, big orders small prices,
+// worldwide shipping, secure payments, discounts and coupons, and the customer reviews below.
 
 const Arrow = () => (
   <span className="cta-arrow">
@@ -18,36 +18,36 @@ const Arrow = () => (
 const CtaRow = ({ id, label = 'Get my free quote' }: { id: string; label?: string }) => (
   <div className="cta-row">
     <a href="#quote" className="btn cta-main" data-cta={id}>{label}<Arrow /></a>
-    <span>Free quote, no commitment. Takes about a minute.</span>
+    <span>Free mockup in 24 hours. Takes about a minute.</span>
   </div>
 );
 
 const INCLUDED = [
+  ['i-box', 'No Minimum Order', 'Order one patch or thousands'],
+  ['i-clock', 'Free Mockup in 24 Hours', 'See your patch before you approve anything'],
+  ['i-truck', 'Free Shipping', 'Delivered to your door at no extra cost'],
+  ['i-gift', 'Money Back Guarantee', 'Not happy with your patches? Get your money back'],
   ['i-pencil', 'Custom Design', 'Give us your concept and our designers bring it to life'],
-  ['i-star', 'Best Quality', 'Made for durability and excellence in every patch'],
-  ['i-box', 'Big Orders, Small Prices', 'Bulk up and save on every order'],
-  ['i-truck', 'Worldwide Shipping', 'Reliable delivery wherever you are'],
-  ['i-check', 'Secure Payments', 'Trusted payment gateways keep your details safe'],
-  ['i-mail', 'Free Quote', 'Ask for a price with no commitment to order'],
+  ['i-star', 'Big Orders, Small Prices', 'The more you order, the less you pay per patch'],
 ];
 
 const WHY = [
   ['3D PVC', 'Raised, dimensional rubber patches that stand out.'],
   ['Durable', 'Tough rubber PVC built for jackets, caps, bags and gear.'],
-  ['Worldwide', 'We deliver to customers all over the world.'],
+  ['Free shipping', 'We deliver to customers all over the world.'],
 ];
 
 const PROMISES = [
+  ['i-gift', 'Money back guarantee', 'If your patches are not right, you get your money back. Simple as that.'],
   ['i-pencil', 'We design your idea', 'Share a logo, sketch or just an idea. Our design team turns it into a patch that matches your vision.'],
   ['i-check', 'Safe, secure payment', 'Advanced encryption and trusted payment gateways protect your information at checkout.'],
-  ['i-gift', 'Discounts on bigger orders', 'Big orders, small prices. Ask about our current offers and bulk discounts.'],
   ['i-phone', 'Clear communication', 'Talk to our team on WhatsApp or email from your first question to delivery.'],
 ];
 
 const STEPS = [
   { title: 'Tell us what you need', text: 'Pick your product, size and quantity. It takes about a minute.', img: withBase('/assets/art/step-1.webp'), accent: '#1F3B83' },
   { title: 'Send your artwork', text: 'Upload your logo, sketch or photo. Our design team checks every file.', img: withBase('/assets/art/step-2.webp'), accent: '#0B6FB0' },
-  { title: 'Get your quote', text: 'We send your price and design details on WhatsApp. Production starts only when you approve.', img: withBase('/assets/art/step-3.webp'), accent: '#0392C6' },
+  { title: 'Get your quote and free mockup', text: 'We send your price and mockup on WhatsApp within 24 hours. Production starts only when you approve.', img: withBase('/assets/art/step-3.webp'), accent: '#0392C6' },
 ];
 
 const MADE_FOR: { label: string; img: string; alt: string }[] = [
@@ -58,11 +58,20 @@ const MADE_FOR: { label: string; img: string; alt: string }[] = [
   { label: 'Clubs and events', img: withBase('/assets/art/made-clubs.webp'), alt: 'Leather motorcycle club vest with large custom back patches' },
 ];
 
+const REVIEWS = [
+  { name: 'Jessica Foxx', text: 'I recently launched a new business selling sports team apparel. Future PVC Patch has provided us with high-quality custom-designed t-shirts and hoodies.' },
+  { name: 'Lily Granger', text: "Future PVC Patch has been a fantastic experience. We are pleased to have excellent quality patches on our motorcycle club's clothing." },
+  { name: 'Daniel R.', text: 'Consistent product quality and clear communication throughout the production cycle. Orders were delivered on schedule without issues.' },
+];
+
 const FAQ: [string, string][] = [
-  ['How much do custom PVC patches cost?', 'It depends on the size, the detail and the quantity. Our online store lists rubber PVC patches from $5 each. Send your request and we reply with a clear price for your design. Bigger orders get a lower price per patch.'],
+  ['How much do custom PVC patches cost?', 'It depends on the size, the detail and the quantity. Send your request and we reply with a clear price and a free mockup within 24 hours. Bigger orders get a lower price per patch.'],
+  ['Is there a minimum order?', 'No. Order one patch or thousands. Bigger orders get a lower price per patch.'],
+  ['Are the mockup and shipping really free?', 'Yes. You get a free mockup within 24 hours, and shipping is free.'],
+  ['What if I am not happy with my patches?', 'Every order comes with our money back guarantee. Tell us what is wrong and we make it right or give your money back.'],
   ['Can you design my patch for me?', 'Absolutely. Share your logo, sketch or idea and our design team creates a patch that matches your vision.'],
   ['What can you make besides patches?', 'We make 3D PVC patches, PVC key chains, stickers, t-shirts and hoodies on custom demand.'],
-  ['Do you ship to my country?', 'Yes. We deliver worldwide with reliable shipping.'],
+  ['Do you ship to my country?', 'Yes. We deliver worldwide, and shipping is free.'],
   ['Is my payment safe?', 'Yes. We use advanced encryption and trusted payment gateways to keep your information safe and private.'],
   ['Do you offer discounts?', 'Yes. Bigger orders get better prices, and we run special offers and coupons. Ask about current deals with your quote.'],
   ['How do I talk to you?', 'Send your request and we reply on WhatsApp with your quote code and details. You can also email us any time.'],
@@ -76,14 +85,14 @@ export default function Page() {
   return (
     <div className="bgp" style={{ minHeight: '100%' }}>
       <div className="announce">
-        <span>Custom 3D PVC patches</span>
-        <span style={{ color: 'var(--yellow)' }}>Big orders, small prices</span>
-        <span>Worldwide shipping</span>
+        <span>No minimum order</span>
+        <span style={{ color: 'var(--yellow)' }}>Free mockup in 24 hours</span>
+        <span>Free shipping and money back guarantee</span>
       </div>
 
       <header className="topbar">
         <a href="#top" className="brand" aria-label={`${BUSINESS.name} home`}>
-          <Image src={withBase('/assets/logo-160.webp')} alt="" width={160} height={160} priority style={{ display: 'block', width: 52, height: 52 }} />
+          <Image src={withBase('/assets/logo-160.webp')} alt="" width={160} height={160} priority style={{ display: 'block', width: 64, height: 64 }} />
           <span style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
             <strong className="hd brand-name">{BUSINESS.nameUpper}</strong>
             <span className="brand-tag">{BUSINESS.tagline.toUpperCase()}</span>
@@ -109,20 +118,20 @@ export default function Page() {
           </svg>
           <div className="hero-grid wrap">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-              <span className="badge-dashed"><span className="i3 s28 i-check" aria-hidden="true" />3D PVC patches, key chains and stickers</span>
+              <span className="badge-dashed"><span className="i3 s28 i-check" aria-hidden="true" />Custom 3D PVC patches</span>
               <h1 className="hd">
-                <span style={{ color: 'var(--navy)' }}>Custom PVC Patches</span>
-                <span style={{ color: 'var(--teal)' }}>Durable, Stylish</span>
-                <span style={{ color: 'var(--red)' }}>And Always Unique</span>
+                <span style={{ color: 'var(--navy)' }}>Premium Custom</span>
+                <span style={{ color: 'var(--teal)' }}>Patches For</span>
+                <span style={{ color: 'var(--red)' }}>Your Brand</span>
               </h1>
               <HeroQuiz types={quizTypes} id="hq-m" className="hq-mobile" />
-              <p className="hero-lead">Design it, patch it and promote. Send your logo or idea and our design team turns it into a durable 3D PVC patch. Big orders, small prices, with reliable worldwide shipping.</p>
+              <p className="hero-lead">Send your logo or idea and see a free mockup in 24 hours. Our design team turns it into a durable, premium patch. Free shipping and no minimum order, backed by our money back guarantee.</p>
               <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                 <a href="#quote" className="btn cta-main" data-cta="hero_quote">Get my free quote<Arrow /></a>
                 <UploadCta />
               </div>
               <div className="promise-card">
-                {['Free quote', 'Custom design', 'Worldwide shipping'].map((t) => (
+                {['Free mockup in 24 hours', 'No minimum order', 'Money back guarantee'].map((t) => (
                   <span key={t}><span className="i3 s28 i-check" aria-hidden="true" />{t}</span>
                 ))}
               </div>
@@ -133,11 +142,11 @@ export default function Page() {
 
         <section style={{ padding: '0 24px', position: 'relative', zIndex: 2 }}>
           <div className="fees hd">
-            <span>CUSTOM DESIGN</span>
+            <span>FREE MOCKUP</span>
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="#0392C6" /></svg>
-            <span>WORLDWIDE SHIPPING</span>
+            <span>FREE SHIPPING</span>
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="#0392C6" /></svg>
-            <span>BULK PRICING</span>
+            <span>NO MINIMUM</span>
           </div>
         </section>
 
@@ -146,7 +155,7 @@ export default function Page() {
             <div className="reel-copy">
               <span className="eyebrow">Why Future PVC Patch</span>
               <h2 className="hd h2">Design It, Patch It And Promote</h2>
-              <p className="sub">We produce top quality products on custom demand: 3D PVC patches, key chains, stickers, t-shirts and hoodies. Simply give us your concept and our talented design team brings it to life, then we deliver it worldwide.</p>
+              <p className="sub">We produce top quality products on custom demand: 3D PVC patches, key chains, stickers, t-shirts and hoodies. Simply give us your concept and our talented design team brings it to life. You see a free mockup within 24 hours, and shipping is free.</p>
               <div className="dg-stats">
                 {WHY.map(([n, t]) => (
                   <div key={n}><strong className="hd">{n}</strong><span>{t}</span></div>
@@ -162,8 +171,8 @@ export default function Page() {
 
         <section style={{ padding: '56px 24px 24px' }}>
           <div className="wrap" style={{ marginBottom: 28, textAlign: 'center' }}>
-            <h2 className="hd h2">Why Customers Choose Us</h2>
-            <p className="sub" style={{ maxWidth: 620 }}>Custom design by our own team, quality you can feel and prices that get better the more you order.</p>
+            <h2 className="hd h2">Everything Included. Zero Risk.</h2>
+            <p className="sub" style={{ maxWidth: 620 }}>Free mockup in 24 hours, free shipping and no minimum order, backed by our money back guarantee.</p>
           </div>
           <div className="wrap trust-grid">
             {INCLUDED.map(([icon, title, text]) => (
@@ -202,8 +211,8 @@ export default function Page() {
         <section style={{ padding: '8px 24px 56px' }}>
           <div className="wrap">
             <span className="eyebrow">Our promise</span>
-            <h2 className="hd h2">Ordering Made Simple</h2>
-            <p className="sub" style={{ maxWidth: 600, marginBottom: 28 }}>From your first idea to delivery, our team keeps it easy and clear.</p>
+            <h2 className="hd h2">No Surprises When Your Patches Arrive</h2>
+            <p className="sub" style={{ maxWidth: 600, marginBottom: 28 }}>You see it, you check it, you approve it. Then we make it, and our money back guarantee covers the rest.</p>
             <div className="promise-grid">
               {PROMISES.map(([icon, title, text]) => (
                 <div className="promise-tile" key={title}>
@@ -253,7 +262,7 @@ export default function Page() {
           <ViewContentObserver />
           <div className="wrap">
             <h2 className="hd h2" style={{ color: '#fff' }}>Get Your Free Quote</h2>
-            <p className="sub" style={{ color: '#CFCFCA', maxWidth: 560, marginBottom: 30 }}>Seven quick steps. Takes about a minute. We reply on WhatsApp with your price.</p>
+            <p className="sub" style={{ color: '#CFCFCA', maxWidth: 560, marginBottom: 30 }}>Seven quick steps. Takes about a minute. We reply on WhatsApp with your price and free mockup.</p>
             <QuoteForm />
           </div>
         </section>
@@ -267,10 +276,28 @@ export default function Page() {
               <p style={{ margin: 0, fontSize: 17, lineHeight: 1.55, color: 'var(--muted)' }}>Message us on WhatsApp or email and talk to a real person who knows patches and knows your order, from your first idea to delivery.</p>
             </div>
             <div style={{ flex: '1 1 300px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-              {BUSINESS.phoneTel && <a href={`https://wa.me/${BUSINESS.phoneTel}`} target="_blank" rel="noopener" className="contact-row" data-cta="local_whatsapp"><span className="i3 s44 i-phone" aria-hidden="true" />WhatsApp {BUSINESS.phoneDisplay}</a>}
+              {BUSINESS.phoneTel && <a href={`tel:${BUSINESS.phoneTel}`} className="contact-row" data-cta="local_phone"><span className="i3 s44 i-phone" aria-hidden="true" />Call or text {BUSINESS.phoneDisplay || BUSINESS.phoneTel}</a>}
               {BUSINESS.email && <a href={`mailto:${BUSINESS.email}`} className="contact-row"><span className="i3 s44 i-mail" aria-hidden="true" />{BUSINESS.email}</a>}
+              <a href={BUSINESS.website} target="_blank" rel="noopener" className="contact-row" data-cta="local_website"><span className="i3 s44 i-pin" aria-hidden="true" />Visit {BUSINESS.websiteLabel}</a>
               {BUSINESS.address && <span className="contact-row"><span className="i3 s44 i-pin" aria-hidden="true" />{BUSINESS.address}</span>}
               <a href="#quote" className="contact-row" data-cta="local_quote"><span className="i3 s44 i-clock" aria-hidden="true" />Start your free quote, it takes a minute</a>
+            </div>
+          </div>
+        </section>
+
+        <section style={{ padding: '8px 24px 64px' }}>
+          <div className="wrap">
+            <span className="eyebrow">Our happy clients</span>
+            <h2 className="hd h2">What Our Customers Say</h2>
+            <p className="sub" style={{ maxWidth: 600, marginBottom: 28 }}>Smart, trendy patches that are high quality and long lasting, for businesses, teams and clubs.</p>
+            <div className="review-grid">
+              {REVIEWS.map((r) => (
+                <figure className="review-card" key={r.name}>
+                  <span className="review-mark hd" aria-hidden="true">&ldquo;</span>
+                  <blockquote>{r.text}</blockquote>
+                  <figcaption>{r.name}</figcaption>
+                </figure>
+              ))}
             </div>
           </div>
         </section>
@@ -292,8 +319,8 @@ export default function Page() {
         <section style={{ padding: '0 24px 64px' }}>
           <div className="wrap final">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 640 }}>
-              <h2 className="hd" style={{ margin: 0, fontSize: 'clamp(28px, 3.6vw, 44px)', lineHeight: 1.05, color: '#fff' }}>Get Your Custom PVC Patch Quote</h2>
-              <p style={{ margin: 0, fontSize: 17, color: '#DCEEFA' }}>Send your design today. Custom design, big order savings and worldwide shipping.</p>
+              <h2 className="hd" style={{ margin: 0, fontSize: 'clamp(28px, 3.6vw, 44px)', lineHeight: 1.05, color: '#fff' }}>Get Your Free Mockup Within 24 Hours</h2>
+              <p style={{ margin: 0, fontSize: 17, color: '#DCEEFA' }}>Free mockup in 24 hours, free shipping, no minimum order and a money back guarantee.</p>
             </div>
             <a href="#quote" className="btn cta-main" data-cta="final_quote">Get my free quote<Arrow /></a>
           </div>
@@ -312,6 +339,7 @@ export default function Page() {
           <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 14 }}>
             {BUSINESS.phoneTel && <a href={`tel:${BUSINESS.phoneTel}`}>{BUSINESS.phoneDisplay}</a>}
             {BUSINESS.email && <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>}
+            <a href={BUSINESS.website} target="_blank" rel="noopener">{BUSINESS.websiteLabel}</a>
             <a href={withBase('/privacy')}>Privacy Policy</a>
             <a href={withBase('/terms')}>Terms</a>
           </div>

@@ -72,7 +72,7 @@ export async function buildQuotePdf(input: PdfInput): Promise<Uint8Array> {
   let y = H - 150;
   page.drawText(safe(`Thanks ${input.firstName}, your quote request is in!`), { x: M, y, size: 18, font: bold, color: NAVY });
   y -= 22;
-  for (const l of wrap('Our patch team will send your quote on WhatsApp shortly. Reply on WhatsApp any time to talk to us.', font, 11, W - 2 * M)) {
+  for (const l of wrap('Our patch team will send your quote and free mockup within 24 hours. Reply on WhatsApp any time to talk to us.', font, 11, W - 2 * M)) {
     page.drawText(l, { x: M, y, size: 11, font, color: MUTED });
     y -= 15;
   }
@@ -107,7 +107,7 @@ export async function buildQuotePdf(input: PdfInput): Promise<Uint8Array> {
   }
 
   y -= 20;
-  page.drawText('Custom design by our team, big order savings, secure payments and worldwide shipping.', {
+  page.drawText('Included: free mockup within 24 hours and free shipping. No minimum order. Money back guarantee.', {
     x: M, y, size: 9.5, font: bold, color: TEAL,
   });
   page.drawText([BUSINESS.phoneDisplay, BUSINESS.email, BUSINESS.address].filter(Boolean).join('  |  ') || BUSINESS.name, { x: M, y: 30, size: 9, font, color: MUTED });
