@@ -83,7 +83,7 @@ export async function ensurePdf(row: QuoteRow): Promise<{ path: string; bytes: U
     logo,
     submittedAt: new Date(row.created_at),
   });
-  const path = `pdf/${row.id}/Custom-Patch-Lab-Quote-${row.verify_code}.pdf`;
+  const path = `pdf/${row.id}/Future-PVC-Patch-Quote-${row.verify_code}.pdf`;
   const { error } = await db().storage.from(env.artworkBucket()).upload(path, bytes, { contentType: 'application/pdf', upsert: true });
   if (error) throw new Error('PDF upload failed: ' + error.message);
   await updateRow(row.id, { pdf_path: path });
@@ -120,7 +120,7 @@ export async function emailCustomer(row: QuoteRow): Promise<void> {
       to: [row.email],
       subject,
       html,
-      attachments: [{ filename: `Custom-Patch-Lab-Quote-${row.verify_code}.pdf`, content: bytes }],
+      attachments: [{ filename: `Future-PVC-Patch-Quote-${row.verify_code}.pdf`, content: bytes }],
     });
   }
   if (ok) await updateRow(row.id, { email_sent: true });

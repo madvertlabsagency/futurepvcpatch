@@ -48,14 +48,14 @@ export const DEFAULT_MAX_MB = 25;
 // in emails and in the quote PDF, so fill them in before launch.
 // The phone number (also used for WhatsApp) comes from Vercel settings, so it can be set without a code
 // change: NEXT_PUBLIC_BUSINESS_PHONE (digits with country code, e.g. 15551234567) and
-// NEXT_PUBLIC_BUSINESS_PHONE_DISPLAY (e.g. +1 (555) 123-4567). Empty hides the phone everywhere.
+// NEXT_PUBLIC_BUSINESS_PHONE_DISPLAY (e.g. +1 (555) 123-4567). Without them the Future PVC Patch US number is used.
 export const BUSINESS = {
   name: 'Future PVC Patch',
   nameUpper: 'FUTURE PVC PATCH',
   tagline: 'Design it, Patch it and Promote',
   codePrefix: 'FPP', // quote codes look like FPP-482913
-  phoneDisplay: process.env.NEXT_PUBLIC_BUSINESS_PHONE_DISPLAY || '',
-  phoneTel: (process.env.NEXT_PUBLIC_BUSINESS_PHONE || '').replace(/\D/g, ''), // also the WhatsApp number
+  phoneDisplay: process.env.NEXT_PUBLIC_BUSINESS_PHONE_DISPLAY || '+1 (581) 205-8482',
+  phoneTel: (process.env.NEXT_PUBLIC_BUSINESS_PHONE || '15812058482').replace(/\D/g, ''), // also the WhatsApp number
   email: 'futurepvcpatch@gmail.com',
   website: 'https://futurepvcpatch.com',
   websiteLabel: 'futurepvcpatch.com',

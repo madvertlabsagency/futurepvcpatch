@@ -46,7 +46,7 @@ export async function verifyAndWelcome(row: QuoteRow, fromE164: string, ghlConta
       ghlContactId: contactId,
       text: welcomeMessage(fresh.first_name, fresh.verify_code),
       pdfUrl,
-      pdfName: `Custom-Patch-Lab-Quote-${fresh.verify_code}.pdf`,
+      pdfName: `Future-PVC-Patch-Quote-${fresh.verify_code}.pdf`,
     });
   } catch (e) {
     // Not marked as sent, so the customer's next WhatsApp message tries again.

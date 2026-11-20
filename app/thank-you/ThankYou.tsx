@@ -4,6 +4,8 @@ import { BUSINESS, waVerifyText } from '@/lib/options';
 import { withBase } from '@/lib/base';
 
 const WA = (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || BUSINESS.phoneTel).replace(/\D/g, '');
+// The "send me a code instead" option needs Twilio Verify; set NEXT_PUBLIC_WA_OTP=1 once it is configured.
+const OTP_ON = process.env.NEXT_PUBLIC_WA_OTP === '1';
 
 type Last = { id: string; code: string; first: string; summary: { k: string; v: string }[]; hasArtwork: boolean };
 
@@ -70,7 +72,7 @@ export default function ThankYou() {
             <>
               <strong style={{ fontSize: 20 }}>Last step: confirm your WhatsApp</strong>
               <p style={{ margin: '8px 0 16px', color: 'var(--muted)' }}>
-                Tap the button and press Send. We will reply right away with your quote details and PDF, and send your mockup there.
+                Tap the button and press Send. Your message lands straight in our WhatsApp, and we send your quote and free mockup there.
               </p>
               <a href={waLink} target="_blank" rel="noopener" className="btn wa-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" fill="#fff"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.2c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.3.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
@@ -80,7 +82,7 @@ export default function ThankYou() {
                 Your quote code: <strong>{last.code}</strong>
               </p>
               <div style={{ marginTop: 14, fontSize: 14 }}>
-                {otpMode === 'idle' ? (
+                {!OTP_ON ? null : otpMode === 'idle' ? (
                   <button type="button" onClick={() => otpCall('send')} style={{ background: 'none', border: 'none', textDecoration: 'underline', color: 'var(--navy)', minHeight: 44, cursor: 'pointer', fontFamily: 'inherit', fontSize: 14 }}>
                     Can&apos;t open WhatsApp here? Send me a code instead
                   </button>

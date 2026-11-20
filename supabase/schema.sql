@@ -211,7 +211,7 @@ create table if not exists crm_accounts (
   color text not null default '#0084ff'
 );
 alter table crm_accounts enable row level security;
-insert into crm_accounts (slug, name, color) values ('billys', 'Billys Custom Patches', '#d9262c') on conflict (slug) do nothing;
+insert into crm_accounts (slug, name, color) values ('future', 'Future PVC Patch', '#1f3b83') on conflict (slug) do nothing;
 
 alter table team_members add column if not exists password_hash text;
 alter table team_members add column if not exists last_login_at timestamptz;
@@ -226,17 +226,17 @@ create table if not exists account_members (
 );
 alter table account_members enable row level security;
 insert into account_members (account_id, member_id)
-  select a.id, m.id from crm_accounts a cross join team_members m where a.slug = 'billys'
+  select a.id, m.id from crm_accounts a cross join team_members m where a.slug = 'future'
   on conflict do nothing;
 
 alter table quote_requests add column if not exists account_id uuid references crm_accounts(id);
-update quote_requests set account_id = (select id from crm_accounts where slug = 'billys') where account_id is null;
+update quote_requests set account_id = (select id from crm_accounts where slug = 'future') where account_id is null;
 create index if not exists quote_requests_account_idx on quote_requests (account_id, created_at desc);
 
 do $$
-declare billys uuid := (select id from crm_accounts where slug = 'billys');
+declare acct uuid := (select id from crm_accounts where slug = 'future');
 begin
-  execute format('alter table quote_requests alter column account_id set default %L', billys);
+  execute format('alter table quote_requests alter column account_id set default %L', acct);
 end $$;
 
 alter table lead_activity add column if not exists actor text;
