@@ -182,32 +182,61 @@ export default function QuoteForm() {
   async function upload(item: FileItem, file: File, folderArg?: string) {
     const update = (patch: Partial<FileItem>) => setFiles((list) => list.map((x) => (x.id === item.id ? { ...x, ...patch } : x)));
     update({ state: 'uploading', progress: 0, error: undefined });
+    const failMsg = 'This file could not upload here. No problem: continue, and send it on WhatsApp after you submit.';
     try {
       const folder = folderArg || f.folder || uuid();
       if (!f.folder) setF((p) => ({ ...p, folder }));
-      const res = await fetch(withBase('/api/upload/sign'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: file.name, size: file.size, folder }),
-      });
-      const data = await res.json().catch(() => ({ error: 'Upload is not available right now. Tick "send it later" and send your file after.' }));
-      if (!res.ok) throw new Error(data.error || 'Upload failed.');
-      await new Promise<void>((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', data.signedUrl);
-        xhr.setRequestHeader('Content-Type', file.type || 'application/octet-stream');
-        xhr.setRequestHeader('x-upsert', 'false');
-        xhr.upload.onprogress = (e) => e.lengthComputable && update({ progress: Math.round((e.loaded / e.total) * 100) });
-        xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error('Upload failed. Check your connection and tap Retry.')));
-        xhr.onerror = () => reject(new Error('Upload failed. Check your connection and tap Retry.'));
-        xhr.send(file);
-      });
-      update({ state: 'done', progress: 100, path: data.path });
+      // Read the file into memory first. In the Facebook and Instagram in-app browsers a photo picked
+      // from the gallery sometimes cannot be streamed, which made the upload fail instantly.
+      let blob: Blob;
+      try {
+        blob = new Blob([await file.arrayBuffer()], { type: file.type || 'application/octet-stream' });
+      } catch {
+        throw new Error(failMsg);
+      }
+      let path = '';
+      let via = 'direct_to_storage';
+      try {
+        const res = await fetch(withBase('/api/upload/sign'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: file.name, size: blob.size, folder }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.signedUrl) throw new Error(data.error || 'sign failed');
+        await new Promise<void>((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('PUT', data.signedUrl);
+          xhr.setRequestHeader('Content-Type', blob.type);
+          xhr.setRequestHeader('x-upsert', 'false');
+          xhr.upload.onprogress = (e) => e.lengthComputable && update({ progress: Math.round((e.loaded / e.total) * 100) });
+          xhr.onload = () => (xhr.status >= 200 && xhr.status < 300 ? resolve() : reject(new Error(`storage ${xhr.status}`)));
+          xhr.onerror = () => reject(new Error('storage network'));
+          xhr.send(blob);
+        });
+        path = data.path;
+      } catch (first) {
+        // Backup: send the file through our own server (up to 4 MB).
+        if (blob.size > 4 * 1024 * 1024) throw new Error(failMsg);
+        via = 'server_backup';
+        update({ progress: 10 });
+        const body = new FormData();
+        body.append('file', blob, file.name);
+        body.append('folder', folder);
+        const res = await fetch(withBase('/api/upload/direct'), { method: 'POST', body });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.path) {
+          fe('artwork_upload_fail', 5, { ext: item.ext, size: item.size, error: `backup failed after ${String((first as Error)?.message || first).slice(0, 60)}` });
+          throw new Error(failMsg);
+        }
+        path = data.path;
+      }
+      update({ state: 'done', progress: 100, path });
       fileObjs.current.delete(item.id);
       track('ArtworkUploaded', { file_type: item.ext });
-      fe('artwork_upload_success', 5, { ext: item.ext, size: item.size });
+      fe('artwork_upload_success', 5, { ext: item.ext, size: item.size, via });
     } catch (e) {
-      update({ state: 'error', error: e instanceof Error ? e.message : 'Upload failed.' });
+      update({ state: 'error', error: e instanceof Error ? e.message : failMsg });
       fe('artwork_upload_fail', 5, { ext: item.ext, size: item.size, error: (e instanceof Error ? e.message : 'failed').slice(0, 120) });
     }
   }
@@ -251,7 +280,7 @@ export default function QuoteForm() {
     if (step === 4 && !f.backing) return ['Choose a backing, or pick Not sure.', 'backing'];
     if (step === 5) {
       if (files.some((x) => x.state === 'uploading')) return ['Wait for your files to finish uploading.', 'files'];
-      if (files.some((x) => x.state === 'error')) return ['One file did not upload. Tap Retry on it, or remove it.', 'files'];
+      // A file that failed to upload never blocks the lead: the customer sends it on WhatsApp after.
       if (!files.length && !f.noArt) return ["Upload your artwork, or tick I don't have artwork yet.", 'files'];
       if (f.email && !EMAIL_RE.test(f.email.trim())) return ['Check your email address, it looks incomplete.', 'email'];
     }
@@ -334,10 +363,13 @@ export default function QuoteForm() {
           sizeUnsure: f.sizeUnsure,
           backing: f.backing,
           files: files.filter((x) => x.state === 'done' && x.path).map((x) => ({ path: x.path, name: x.name, size: x.size, ext: x.ext })),
-          noArtwork: f.noArt && !files.length,
+          // No uploaded file (none chosen, or all failed in an in-app browser) counts as artwork to follow.
+          noArtwork: !files.some((x) => x.state === 'done' && x.path),
           deadline: f.deadline,
           deadlineDate: f.deadline === 'Specific deadline' ? f.date : '',
-          notes: f.notes,
+          notes: files.some((x) => x.state === 'error')
+            ? `${f.notes ? `${f.notes}\n\n` : ''}[Artwork did not upload from the customer's phone. They will send it on WhatsApp.]`
+            : f.notes,
           firstName: f.first,
           lastName: f.last,
           business: f.biz,
@@ -512,6 +544,11 @@ export default function QuoteForm() {
                   </li>
                 ))}
               </ul>
+            )}
+            {files.some((x) => x.state === 'error') && (
+              <p role="status" style={{ marginTop: 12, padding: '10px 12px', borderRadius: 10, background: '#FFF6E5', color: '#7A4B00', fontSize: 14 }}>
+                Your file did not upload in this app. No problem: tap Continue and finish your request. Right after, you can send your artwork to us on WhatsApp.
+              </p>
             )}
             <label className="chk" style={{ marginTop: 16 }}>
               <input type="checkbox" checked={f.noArt} onChange={(e) => set('noArt', e.target.checked)} />
