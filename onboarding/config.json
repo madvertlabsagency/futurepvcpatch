@@ -1,0 +1,23 @@
+{
+  "clientName": "Future PVC Patch",
+  "funnelUrl": "https://quote.futurepvcpatch.com/",
+  "funnelHost": "quote.futurepvcpatch.com",
+  "crmUrl": "https://crm.madvertlabs.com/patches",
+  "crmHost": "crm.madvertlabs.com",
+  "clientEmail": "futurepvcpatch@gmail.com",
+  "whatsapp": "+1 581 205 8482",
+  "sample": {
+    "patchType": "Embroidered",
+    "quantity": "100 to 249",
+    "width": "3.5",
+    "height": "3.5",
+    "backing": "Iron on",
+    "deadline": "Within 1 month",
+    "notes": "SAMPLE LEAD for your onboarding guide. Navy and gold please.",
+    "firstName": "Sample",
+    "lastName": "Customer",
+    "business": "Summit Outdoor Co (sample)",
+    "email": "futurepvcpatch@gmail.com",
+    "phone": "5812058482"
+  }
+}

@@ -11,7 +11,8 @@ import { ownerWhatsAppLink, syncToGhl, summaryRows, type QuoteRow, type SyncDeps
 export { ownerWhatsAppLink };
 import { sendCapi } from './capi';
 import { isQualified } from './scoring';
-import { BUSINESS, contactLine, waVerifyText } from './options';
+import { waVerifyText } from './options';
+import { customerEmail, nudgeEmail, ownerAlertEmail } from './email-templates';
 
 const SEVEN_DAYS = 7 * 24 * 3600;
 
@@ -98,17 +99,7 @@ export async function emailCustomer(row: QuoteRow): Promise<void> {
   const { bytes, path } = await ensurePdf(row);
   const wa = env.whatsappBusinessNumber();
   const waLink = wa ? `https://wa.me/${wa}?text=${encodeURIComponent(waVerifyText(row.verify_code))}` : '';
-  const rows = summaryRows(row)
-    .map((r) => `<tr><td style="padding:6px 0;color:#55595F">${r.k}</td><td style="padding:6px 0;text-align:right;font-weight:700">${r.v}</td></tr>`)
-    .join('');
-  const subject = `Your ${BUSINESS.name} quote request ${row.verify_code}`;
-  const html = `<div style="font-family:Arial,sans-serif;color:#0F1A3A;max-width:560px">
-      <h2 style="margin:0 0 8px">Thanks ${escapeHtml(row.first_name)}, your quote request is in!</h2>
-      <p style="color:#55595F">Our patch team will send your quote and free mockup within 24 hours. Your full request and artwork are attached as a PDF.</p>
-      <table style="width:100%;border-collapse:collapse;font-size:15px">${rows}</table>
-      ${waLink ? `<p style="margin:24px 0"><a href="${waLink}" style="background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:999px;display:inline-block">Chat with us on WhatsApp</a></p>` : ''}
-      <p style="color:#55595F;font-size:13px">${escapeHtml(contactLine('. '))}.</p>
-    </div>`;
+  const { subject, html } = customerEmail(row, waLink);
   let ok = false;
   if (viaGhl) {
     const url = await signedUrl(path);
@@ -150,35 +141,13 @@ export async function alertOwner(row: QuoteRow): Promise<void> {
   if (row.owner_alert_sent) return;
   const to = env.alertEmails();
   if (!to.length) return;
-  const art = row.files.map((f) => `<a href="${fileLink(f.path)}">${escapeHtml(f.name)}</a>`).join('<br>') || 'No artwork, needs design help';
-  const pdf = row.pdf_path ? `<a href="${fileLink(row.pdf_path)}">Quote PDF</a>` : '';
-  const t = row.tracking || {};
-  const rows = [
-    ...summaryRows(row),
-    { k: 'Lead score', v: `${row.lead_score} (${row.lead_grade})` },
-    { k: 'Tags', v: row.tags.join(', ') },
-    { k: 'Business', v: row.business || 'n/a' },
-    { k: 'Email', v: row.email },
-    { k: 'WhatsApp', v: row.phone_e164 },
-    { k: 'Source', v: [t.utm_source, t.utm_campaign, t.utm_content].filter(Boolean).join(' / ') || 'Direct' },
-  ]
-    .map((r) => `<tr><td style="padding:6px 0;color:#55595F">${escapeHtml(r.k)}</td><td style="padding:6px 0;text-align:right;font-weight:700">${escapeHtml(String(r.v))}</td></tr>`)
-    .join('');
-  const btn = (href: string, label: string, bg: string) =>
-    `<a href="${href}" style="display:inline-block;margin:0 8px 8px 0;background:${bg};color:#fff;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:999px">${label}</a>`;
-  const ok = await sendEmail({
-    to,
-    subject: `New quote ${row.verify_code}: ${row.first_name} ${row.last_name}, ${row.quantity} ${row.patch_type} (${row.lead_grade})`,
-    html: `<div style="font-family:Arial,sans-serif;color:#0F1A3A;max-width:600px">
-      <h2 style="margin:0 0 4px">New quote request ${row.verify_code}</h2>
-      <p style="margin:0 0 16px;color:#55595F">Reply fast: leads contacted within 5 minutes are far more likely to buy.</p>
-      <p>${btn(ownerWhatsAppLink(row), 'WhatsApp customer', '#25D366')}${btn(`tel:${row.phone_e164}`, 'Call', '#0F1A3A')}${btn(`mailto:${row.email}?subject=${encodeURIComponent(`Your ${BUSINESS.name} quote ` + row.verify_code)}`, 'Email', '#1E5BC6')}${btn(`${env.crmUrl()}/lead/${row.id}`, 'Open in CRM', '#D9262C')}</p>
-      <table style="width:100%;border-collapse:collapse;font-size:15px">${rows}</table>
-      <p><strong>Notes:</strong> ${escapeHtml(row.notes || 'none')}</p>
-      <p><strong>Artwork:</strong><br>${art}</p>
-      <p>${pdf}</p>
-    </div>`,
+  const { subject, html } = ownerAlertEmail(row, {
+    whatsapp: ownerWhatsAppLink(row),
+    crm: `${env.crmUrl()}/lead/${row.id}`,
+    artwork: row.files.map((f) => ({ name: f.name, href: fileLink(f.path) })),
+    pdf: row.pdf_path ? fileLink(row.pdf_path) : null,
   });
+  const ok = await sendEmail({ to, subject, html });
   if (ok) await updateRow(row.id, { owner_alert_sent: true });
 }
 
@@ -189,16 +158,7 @@ export async function nudgeUnverified(row: QuoteRow): Promise<void> {
   const wa = env.whatsappBusinessNumber();
   const waLink = wa ? `https://wa.me/${wa}?text=${encodeURIComponent(waVerifyText(row.verify_code))}` : '';
   if (waLink) {
-    await sendEmail({
-      to: [row.email],
-      subject: `${row.first_name}, where should we send your free mockup?`,
-      html: `<div style="font-family:Arial,sans-serif;color:#0F1A3A;max-width:560px">
-        <h2 style="margin:0 0 8px">Your patch mockup is being prepared</h2>
-        <p style="color:#55595F">Hi ${escapeHtml(row.first_name)}, we are working on your ${escapeHtml(row.quantity)} ${escapeHtml(row.patch_type)} order (quote ${row.verify_code}). The fastest way to get your price and mockup is WhatsApp. Tap below and press Send.</p>
-        <p style="margin:24px 0"><a href="${waLink}" style="background:#25D366;color:#fff;text-decoration:none;font-weight:700;padding:14px 22px;border-radius:999px;display:inline-block">Get my mockup on WhatsApp</a></p>
-        <p style="color:#55595F;font-size:13px">Prefer email? Just reply to this message. ${escapeHtml(contactLine('. '))}.</p>
-      </div>`,
-    });
+    await sendEmail({ to: [row.email], ...nudgeEmail(row, waLink) });
   }
   if (env.waNudgeTemplate()) {
     await sendWhatsAppTemplate(row.phone_e164, env.waNudgeTemplate(), [row.first_name, row.verify_code]).catch((e) =>
@@ -240,6 +200,3 @@ export async function processRequest(id: string): Promise<string> {
   return syncToGhl(row, syncDeps());
 }
 
-function escapeHtml(s: string): string {
-  return s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
-}
