@@ -120,6 +120,9 @@ export default async function LaunchCheck() {
     ['CUSTOMER_EMAIL_PROVIDER', shown('CUSTOMER_EMAIL_PROVIDER')],
     ['WHATSAPP_PROVIDER', shown('WHATSAPP_PROVIDER')],
     ['GHL, CRM and WhatsApp setting names seen', related.length ? related.join(', ') : 'none'],
+    ['Supabase project used', supabaseHost()],
+    ['Supabase server key type', supabaseKeyKind()],
+    ['Supabase and Postgres setting names seen', Object.keys(process.env).filter((n) => /SUPABASE|POSTGRES/i.test(n)).sort().join(', ') || 'none'],
     ...recent.map((r): [string, string] => [`Lead ${r.verify_code}`, `${r.status}${r.ghl_contact_id ? ', contact in GHL' : ''}${r.ghl_opportunity_id ? ', opportunity in GHL' : ', no opportunity yet'}${r.last_error ? `. Error: ${r.last_error.slice(0, 300)}` : ''}`]),
   ];
 
@@ -160,4 +163,34 @@ export default async function LaunchCheck() {
       </table>
     </main>
   );
+}
+
+// The project address is public (it is in every API call), so the host is safe to show. It tells which
+// Supabase project this deployment really talks to, for example when a Vercel integration adds its own.
+function supabaseHost(): string {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  if (!raw) return 'not set';
+  try {
+    return new URL(raw.trim()).host + (raw !== raw.trim() ? ' (value has extra spaces or line breaks)' : '');
+  } catch {
+    return 'not a valid URL';
+  }
+}
+
+// Only the kind of key and, for the older JWT keys, the role and project they belong to. Never the key itself.
+function supabaseKeyKind(): string {
+  const k = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
+  if (!k) return 'not set';
+  if (k.startsWith('sb_secret_')) return 'secret key (sb_secret), fine';
+  if (k.startsWith('sb_publishable_')) return 'publishable key: wrong, use the service_role or secret key';
+  const parts = k.split('.');
+  if (parts.length === 3) {
+    try {
+      const p = JSON.parse(Buffer.from(parts[1], 'base64url').toString('utf8')) as { role?: string; ref?: string };
+      return `JWT key, role ${p.role || 'unknown'}, project ${p.ref || 'unknown'}${p.role === 'service_role' ? '' : ': wrong, use the service_role key'}`;
+    } catch {
+      return 'JWT key that could not be read';
+    }
+  }
+  return 'unknown key format';
 }
