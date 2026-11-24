@@ -1,7 +1,7 @@
 import { randomInt } from 'node:crypto';
 import { NextResponse, after } from 'next/server';
 import { submissionSchema } from '@/lib/schema';
-import { clientIp, db, rateLimit } from '@/lib/supabase';
+import { clientIp, crmAccountId, db, rateLimit } from '@/lib/supabase';
 import { verifyTurnstile } from '@/lib/turnstile';
 import { toE164 } from '@/lib/phone';
 import { scoreLead } from '@/lib/scoring';
@@ -61,7 +61,15 @@ export async function POST(req: Request) {
     notes: s.notes,
   });
 
+  // Every lead belongs to this funnel's client account in the shared Madvert Labs CRM. If that account is
+  // missing the lead is still saved (never lose a lead) and the owner is told to create the account.
+  const account = await crmAccountId().catch(() => null);
+  if (!account) {
+    await alertAdmins('CRM account missing', `No crm_accounts row with slug "${env.crmAccountSlug()}". The lead was saved without an account, so it does not show in the CRM yet. Create the account in the CRM, then set account_id on this lead.`).catch(() => undefined);
+  }
+
   const row = {
+    account_id: account,
     event_id: s.eventId,
     first_name: s.firstName,
     last_name: s.lastName,

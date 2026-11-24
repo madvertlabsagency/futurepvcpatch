@@ -1,6 +1,6 @@
 import 'server-only';
 import { createHash } from 'node:crypto';
-import { db } from './supabase';
+import { analyticsDb } from './supabase';
 import { EMPTY_META, parseInsightRow, type MetaData, type MetaTotals } from './funnel/meta-types';
 
 // Meta Marketing API (Graph API) insights, read with a system user token. Server only.
@@ -33,7 +33,7 @@ export async function getMetaData(since: string, until: string, nameFilter: stri
   if (!token || !account) return EMPTY_META;
   const key = createHash('sha256').update(JSON.stringify([account, version, since, until, nameFilter || ''])).digest('hex').slice(0, 40);
 
-  const { data: cached } = await db().from('meta_insights_cache').select('fetched_at, payload').eq('key', key).maybeSingle();
+  const { data: cached } = await analyticsDb().from('meta_insights_cache').select('fetched_at, payload').eq('key', key).maybeSingle();
   if (cached && Date.now() - new Date(cached.fetched_at).getTime() < CACHE_MS) return cached.payload as MetaData;
 
   const base: Record<string, string> = {
@@ -51,7 +51,7 @@ export async function getMetaData(since: string, until: string, nameFilter: stri
       ? { spend: Number(a.spend) || 0, impressions: Number(a.impressions) || 0, reach: Number(a.reach) || 0, frequency: Number(a.frequency) || 0 }
       : null;
     const payload: MetaData = { configured: true, ads: adRows.map(parseInsightRow), totals, fetchedAt: new Date().toISOString() };
-    await db().from('meta_insights_cache').upsert({ key, fetched_at: payload.fetchedAt, payload });
+    await analyticsDb().from('meta_insights_cache').upsert({ key, fetched_at: payload.fetchedAt, payload });
     return payload;
   } catch (e) {
     const msg = e instanceof Error ? e.message : 'Meta API failed';

@@ -1,5 +1,5 @@
 import 'server-only';
-import { db } from '../supabase';
+import { analyticsDb } from '../supabase';
 import type { Device } from './events';
 
 const BOT_RE = /bot|crawl|spider|slurp|headless|lighthouse|pagespeed|facebookexternalhit|preview|monitor|curl|wget|python|axios/i;
@@ -26,7 +26,7 @@ export type EventRow = {
 
 export async function insertEvents(rows: EventRow[]): Promise<void> {
   if (!rows.length) return;
-  const { error } = await db().from('funnel_events').insert(rows);
+  const { error } = await analyticsDb().from('funnel_events').insert(rows);
   if (error) console.error('funnel_events insert failed', error.message);
 }
 

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { db } from '@/lib/supabase';
+import { analyticsDb, crmAccountId, db } from '@/lib/supabase';
 import { env } from '@/lib/env';
 import { Ghl } from '@/lib/ghl';
 
@@ -53,7 +53,8 @@ export default async function LaunchCheck() {
   const key = set('APP_SUPABASE_SERVICE_ROLE_KEY') || set('SUPABASE_SERVICE_ROLE_KEY');
   const can = supa && key;
   const [leads, leadsMsg] = can ? await tryDb(() => db().from('quote_requests').select('id').limit(1)) : [false, 'Supabase is not connected'];
-  const [events, eventsMsg] = can ? await tryDb(() => db().from('funnel_events').select('id').limit(1)) : [false, 'Supabase is not connected'];
+  const [events, eventsMsg] = can ? await tryDb(() => analyticsDb().from('funnel_events').select('id').limit(1)) : [false, 'Supabase is not connected'];
+  const crmAccount = can ? await crmAccountId().catch(() => null) : null;
   const [limits, limitsMsg] = can ? await tryDb(() => db().rpc('hit_rate_limit', { p_key: 'launch-check', p_limit: 1000, p_window_seconds: 60 })) : [false, 'Supabase is not connected'];
   let bucket = false;
   let bucketMsg = 'Supabase is not connected';
@@ -75,6 +76,7 @@ export default async function LaunchCheck() {
     { area: 'Database', item: 'Supabase connected', ok: can, note: can ? '' : `${supa ? '' : 'NEXT_PUBLIC_SUPABASE_URL missing. '}${key ? '' : 'SUPABASE_SERVICE_ROLE_KEY missing.'}`, fix: 'Vercel > Integrations > Supabase, or add both variables' },
     { area: 'Database', item: 'Leads table (quote_requests)', ok: leads, note: leadsMsg, fix: schema },
     { area: 'Database', item: 'Funnel analytics table', ok: events, note: eventsMsg, fix: schema },
+    { area: 'Database', item: 'CRM account for this funnel', ok: !!crmAccount, note: crmAccount ? `slug ${env.crmAccountSlug()}` : `No CRM account with slug ${env.crmAccountSlug()} yet: leads save without an account and do not show in the CRM`, fix: 'CRM > Accounts > Create account with the client name' },
     { area: 'Database', item: 'Spam rate limit function', ok: limits, note: limitsMsg, fix: schema },
     { area: 'Database', item: `Artwork upload bucket (${env.artworkBucket()})`, ok: bucket, note: bucketMsg, fix: schema },
     { area: 'Security', item: 'ARTWORK_LINK_SECRET', ok: set('ARTWORK_LINK_SECRET'), note: '', fix: 'Any random 40 character string' },
@@ -97,7 +99,7 @@ export default async function LaunchCheck() {
     { area: 'Tracking', item: 'Test event code is off', ok: !set('META_TEST_EVENT_CODE'), note: set('META_TEST_EVENT_CODE') ? 'Remove META_TEST_EVENT_CODE before going live' : '', fix: 'Delete META_TEST_EVENT_CODE' },
     { area: 'Site', item: 'NEXT_PUBLIC_SITE_URL', ok: set('NEXT_PUBLIC_SITE_URL'), note: process.env.NEXT_PUBLIC_SITE_URL || '', fix: 'The live address, for example https://quote.billyscustompatches.com' },
   ];
-  const required = new Set(['Supabase connected', 'Leads table (quote_requests)', 'Funnel analytics table', 'Spam rate limit function', `Artwork upload bucket (${env.artworkBucket()})`, 'ARTWORK_LINK_SECRET', 'Alert emails go to', ...(ghlOn ? ['GHL connection and pipeline'] : ['Resend: sending domain verified'])]);
+  const required = new Set(['Supabase connected', 'Leads table (quote_requests)', 'CRM account for this funnel', 'Funnel analytics table', 'Spam rate limit function', `Artwork upload bucket (${env.artworkBucket()})`, 'ARTWORK_LINK_SECRET', 'Alert emails go to', ...(ghlOn ? ['GHL connection and pipeline'] : ['Resend: sending domain verified'])]);
   const blockers = rows.filter((r) => required.has(r.item) && r.ok !== true).length;
 
   // The last few leads and how far their GHL sync got (quote code and status only, no personal details).
@@ -122,6 +124,7 @@ export default async function LaunchCheck() {
     ['GHL, CRM and WhatsApp setting names seen', related.length ? related.join(', ') : 'none'],
     ['Supabase project used', supabaseHost()],
     ['Supabase server key type', supabaseKeyKind()],
+    ['Funnel analytics project', env.analyticsUrl() ? new URL(env.analyticsUrl()).host : 'same as the lead database'],
     ['Supabase and Postgres setting names seen', Object.keys(process.env).filter((n) => /SUPABASE|POSTGRES/i.test(n)).sort().join(', ') || 'none'],
     ...recent.map((r): [string, string] => [`Lead ${r.verify_code}`, `${r.status}${r.ghl_contact_id ? ', contact in GHL' : ''}${r.ghl_opportunity_id ? ', opportunity in GHL' : ', no opportunity yet'}${r.last_error ? `. Error: ${r.last_error.slice(0, 300)}` : ''}`]),
   ];

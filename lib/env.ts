@@ -23,14 +23,20 @@ export const env = {
   // for its own project and cannot always be removed, so these keep the funnel on the project we chose.
   supabaseUrl: () => (process.env.APP_SUPABASE_URL || '').trim() || req('NEXT_PUBLIC_SUPABASE_URL'),
   supabaseServiceKey: () => (process.env.APP_SUPABASE_SERVICE_ROLE_KEY || '').trim() || req('SUPABASE_SERVICE_ROLE_KEY'),
+  // Funnel analytics (visits, clicks, form steps) can live in a separate project, so a shared lead database
+  // (the Madvert Labs CRM) never mixes one client's traffic into another client's funnel reports.
+  analyticsUrl: () => (process.env.APP_ANALYTICS_SUPABASE_URL || '').trim(),
+  analyticsKey: () => (process.env.APP_ANALYTICS_SUPABASE_SERVICE_ROLE_KEY || '').trim(),
+  // The CRM account (crm_accounts.slug) every new lead from this funnel belongs to.
+  crmAccountSlug: () => opt('CRM_ACCOUNT_SLUG', 'future-pvc-patch'),
   artworkBucket: () => opt('SUPABASE_ARTWORK_BUCKET', 'rfq-artwork'),
   maxMb: () => Number(opt('ARTWORK_MAX_MB', '25')) || 25,
   linkSecret: () => req('ARTWORK_LINK_SECRET'),
   // CRM: 'none' keeps everything in Supabase plus the /admin page; 'ghl' also syncs to GoHighLevel.
   crmProvider: () => (choice('CRM_PROVIDER', 'none') === 'ghl' ? 'ghl' : 'none') as 'ghl' | 'none',
   adminPassword: () => opt('ADMIN_PASSWORD'),
-  // Where the CRM app lives, for links in owner emails. Defaults to /patches on this site.
-  crmUrl: () => opt('CRM_URL').replace(/\/$/, '') || `${env.siteUrl()}/patches`,
+  // Where the CRM app lives, for links in owner emails: the shared Madvert Labs Patches CRM.
+  crmUrl: () => (opt('CRM_URL') || 'https://crm.madvertlabs.com/patches').replace(/\/$/, ''),
   // Customer email: through GHL (shows in the GHL conversation) or Resend. Defaults to GHL when the CRM is GHL.
   customerEmailVia: () => (choice('CUSTOMER_EMAIL_PROVIDER') || (choice('CRM_PROVIDER') === 'ghl' ? 'ghl' : 'resend')) as 'ghl' | 'resend',
   waNudgeTemplate: () => opt('WHATSAPP_NUDGE_TEMPLATE'),

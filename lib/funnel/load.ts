@@ -1,5 +1,5 @@
 import 'server-only';
-import { db } from '../supabase';
+import { analyticsDb } from '../supabase';
 import { getMetaData } from '../meta-ads';
 import type { FunnelEvent } from './events';
 import { demoData } from './demo';
@@ -17,7 +17,7 @@ export const campaignFilter = () => (process.env.FUNNEL_CAMPAIGN_FILTER ?? 'Lead
 export async function loadEvents(start: number, end: number): Promise<FunnelEvent[]> {
   const out: FunnelEvent[] = [];
   for (let from = 0; from < MAX_ROWS; from += PAGE) {
-    const { data, error } = await db()
+    const { data, error } = await analyticsDb()
       .from('funnel_events')
       .select(COLUMNS)
       .gte('created_at', new Date(start).toISOString())
@@ -32,12 +32,12 @@ export async function loadEvents(start: number, end: number): Promise<FunnelEven
 }
 
 export async function loadSettings(): Promise<Settings> {
-  const { data } = await db().from('app_state').select('value').eq('key', 'funnel_settings').maybeSingle();
+  const { data } = await analyticsDb().from('app_state').select('value').eq('key', 'funnel_settings').maybeSingle();
   return mergeSettings(data?.value);
 }
 
 export async function saveSettings(values: Settings): Promise<void> {
-  const { error } = await db().from('app_state').upsert({ key: 'funnel_settings', value: values });
+  const { error } = await analyticsDb().from('app_state').upsert({ key: 'funnel_settings', value: values });
   if (error) throw new Error('Saving settings failed: ' + error.message);
 }
 
