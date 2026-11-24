@@ -126,6 +126,7 @@ export default async function LaunchCheck() {
     ['Supabase project used', supabaseHost()],
     ['Supabase server key type', supabaseKeyKind()],
     ['Funnel analytics project', env.analyticsUrl() ? new URL(env.analyticsUrl()).host : 'same as the lead database'],
+    ['Meta, pixel and tracking setting names seen', Object.keys(process.env).filter((n) => /META|PIXEL|FB|FACEBOOK|CAPI/i.test(n)).sort().map((n) => JSON.stringify(n)).join(', ') || 'none'],
     ['Supabase and Postgres setting names seen', Object.keys(process.env).filter((n) => /SUPABASE|POSTGRES/i.test(n)).sort().join(', ') || 'none'],
     ...recent.map((r): [string, string] => [`Lead ${r.verify_code}`, `${r.status}${r.ghl_contact_id ? ', contact in GHL' : ''}${r.ghl_opportunity_id ? ', opportunity in GHL' : ', no opportunity yet'}${r.last_error ? `. Error: ${r.last_error.slice(0, 300)}` : ''}`]),
   ];
