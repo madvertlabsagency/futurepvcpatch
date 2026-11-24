@@ -49,8 +49,8 @@ async function ghlCheck(): Promise<[boolean, string]> {
 }
 
 export default async function LaunchCheck() {
-  const supa = set('NEXT_PUBLIC_SUPABASE_URL') || set('SUPABASE_URL');
-  const key = set('SUPABASE_SERVICE_ROLE_KEY');
+  const supa = set('APP_SUPABASE_URL') || set('NEXT_PUBLIC_SUPABASE_URL') || set('SUPABASE_URL');
+  const key = set('APP_SUPABASE_SERVICE_ROLE_KEY') || set('SUPABASE_SERVICE_ROLE_KEY');
   const can = supa && key;
   const [leads, leadsMsg] = can ? await tryDb(() => db().from('quote_requests').select('id').limit(1)) : [false, 'Supabase is not connected'];
   const [events, eventsMsg] = can ? await tryDb(() => db().from('funnel_events').select('id').limit(1)) : [false, 'Supabase is not connected'];
@@ -168,7 +168,7 @@ export default async function LaunchCheck() {
 // The project address is public (it is in every API call), so the host is safe to show. It tells which
 // Supabase project this deployment really talks to, for example when a Vercel integration adds its own.
 function supabaseHost(): string {
-  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+  const raw = process.env.APP_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL || '';
   if (!raw) return 'not set';
   try {
     return new URL(raw.trim()).host + (raw !== raw.trim() ? ' (value has extra spaces or line breaks)' : '');
@@ -179,7 +179,7 @@ function supabaseHost(): string {
 
 // Only the kind of key and, for the older JWT keys, the role and project they belong to. Never the key itself.
 function supabaseKeyKind(): string {
-  const k = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
+  const k = (process.env.APP_SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
   if (!k) return 'not set';
   if (k.startsWith('sb_secret_')) return 'secret key (sb_secret), fine';
   if (k.startsWith('sb_publishable_')) return 'publishable key: wrong, use the service_role or secret key';

@@ -19,8 +19,10 @@ export const env = {
     const url = opt('NEXT_PUBLIC_SITE_URL', 'http://localhost:3000').replace(/\/$/, '');
     return base && !url.endsWith(base) ? url + base : url;
   },
-  supabaseUrl: () => req('NEXT_PUBLIC_SUPABASE_URL'),
-  supabaseServiceKey: () => req('SUPABASE_SERVICE_ROLE_KEY'),
+  // APP_SUPABASE_* win over the standard names: the Vercel Supabase integration writes the standard names
+  // for its own project and cannot always be removed, so these keep the funnel on the project we chose.
+  supabaseUrl: () => (process.env.APP_SUPABASE_URL || '').trim() || req('NEXT_PUBLIC_SUPABASE_URL'),
+  supabaseServiceKey: () => (process.env.APP_SUPABASE_SERVICE_ROLE_KEY || '').trim() || req('SUPABASE_SERVICE_ROLE_KEY'),
   artworkBucket: () => opt('SUPABASE_ARTWORK_BUCKET', 'rfq-artwork'),
   maxMb: () => Number(opt('ARTWORK_MAX_MB', '25')) || 25,
   linkSecret: () => req('ARTWORK_LINK_SECRET'),
