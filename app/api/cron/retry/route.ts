@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/lib/supabase';
 import { env } from '@/lib/env';
 import { nudgeUnverified, processRequest } from '@/lib/service';
+import { forwardPending } from '@/lib/crm-forward';
 import type { QuoteRow } from '@/lib/sync';
 
 export const runtime = 'nodejs';
@@ -49,5 +50,6 @@ export async function GET(req: Request) {
     .limit(25);
   for (const row of unverified || []) await nudgeUnverified(row as QuoteRow).catch((e) => console.error('nudge failed', e));
 
-  return NextResponse.json({ processed: ids.length, results, nudged: (unverified || []).length });
+  const forwarded = await forwardPending().catch((e) => (console.error('CRM forward retry failed', e), 0));
+  return NextResponse.json({ processed: ids.length, results, nudged: (unverified || []).length, forwarded });
 }

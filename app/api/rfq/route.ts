@@ -7,7 +7,8 @@ import { toE164 } from '@/lib/phone';
 import { scoreLead } from '@/lib/scoring';
 import { env } from '@/lib/env';
 import { sendCapi } from '@/lib/capi';
-import { processRequest } from '@/lib/service';
+import { loadRow, processRequest } from '@/lib/service';
+import { forwardToCrm } from '@/lib/crm-forward';
 import { alertAdmins } from '@/lib/email';
 import { logSubmit } from '@/lib/funnel/server';
 import { isQualified } from '@/lib/scoring';
@@ -141,6 +142,9 @@ export async function POST(req: Request) {
       customData: { patch_type: s.patchType, quantity: s.quantity, lead_grade: grade },
     });
     await processRequest(id).catch((e) => console.error('processing failed, cron will retry', e));
+    // Then into the shared Madvert Labs Patches CRM (crm.madvertlabs.com). A miss is retried by the cron.
+    const fresh = await loadRow(id).catch(() => null);
+    if (fresh) await forwardToCrm(fresh);
   });
 
   return NextResponse.json({ id, code: saved.verify_code, grade, hasArtwork });

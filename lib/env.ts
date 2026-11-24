@@ -29,6 +29,10 @@ export const env = {
   analyticsKey: () => (process.env.APP_ANALYTICS_SUPABASE_SERVICE_ROLE_KEY || '').trim(),
   // The CRM account (crm_accounts.slug) every new lead from this funnel belongs to.
   crmAccountSlug: () => opt('CRM_ACCOUNT_SLUG', 'future-pvc-patch'),
+  // Every lead is also sent to the shared Madvert Labs Patches CRM, which saves it under CRM_ACCOUNT_SLUG.
+  // CRM_INGEST_SECRET must match the same setting on the CRM project; without it nothing is sent.
+  crmIngestUrl: () => opt('CRM_INGEST_URL', 'https://crm.madvertlabs.com/api/crm/ingest'),
+  crmIngestSecret: () => opt('CRM_INGEST_SECRET'),
   artworkBucket: () => opt('SUPABASE_ARTWORK_BUCKET', 'rfq-artwork'),
   maxMb: () => Number(opt('ARTWORK_MAX_MB', '25')) || 25,
   linkSecret: () => req('ARTWORK_LINK_SECRET'),

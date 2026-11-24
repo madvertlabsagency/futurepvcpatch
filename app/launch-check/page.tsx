@@ -76,6 +76,7 @@ export default async function LaunchCheck() {
     { area: 'Database', item: 'Supabase connected', ok: can, note: can ? '' : `${supa ? '' : 'NEXT_PUBLIC_SUPABASE_URL missing. '}${key ? '' : 'SUPABASE_SERVICE_ROLE_KEY missing.'}`, fix: 'Vercel > Integrations > Supabase, or add both variables' },
     { area: 'Database', item: 'Leads table (quote_requests)', ok: leads, note: leadsMsg, fix: schema },
     { area: 'Database', item: 'Funnel analytics table', ok: events, note: eventsMsg, fix: schema },
+    { area: 'CRM', item: 'Leads go to crm.madvertlabs.com', ok: set('CRM_INGEST_SECRET'), note: set('CRM_INGEST_SECRET') ? env.crmIngestUrl() : 'CRM_INGEST_SECRET not set: leads stay only in this funnel', fix: 'Set CRM_INGEST_SECRET here and the same value on the CRM project' },
     { area: 'Database', item: 'CRM account for this funnel', ok: !!crmAccount, note: crmAccount ? `slug ${env.crmAccountSlug()}` : `No CRM account with slug ${env.crmAccountSlug()} yet: leads save without an account and do not show in the CRM`, fix: 'CRM > Accounts > Create account with the client name' },
     { area: 'Database', item: 'Spam rate limit function', ok: limits, note: limitsMsg, fix: schema },
     { area: 'Database', item: `Artwork upload bucket (${env.artworkBucket()})`, ok: bucket, note: bucketMsg, fix: schema },

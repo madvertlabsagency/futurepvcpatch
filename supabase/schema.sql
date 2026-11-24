@@ -260,3 +260,9 @@ update team_members set email = lower(trim(email)) where email is not null and e
 
 -- Estimated value of a new RFQ, shown in new lead notifications.
 alter table crm_accounts add column if not exists est_rfq_value numeric(12, 2) check (est_rfq_value is null or est_rfq_value >= 0);
+
+-- Forwarding to the shared Madvert Labs Patches CRM (crm.madvertlabs.com, /api/crm/ingest).
+alter table quote_requests add column if not exists crm_forwarded_at timestamptz;
+alter table quote_requests add column if not exists crm_lead_id uuid;
+alter table quote_requests add column if not exists crm_forward_error text;
+create index if not exists quote_requests_crm_pending_idx on quote_requests (created_at) where crm_forwarded_at is null;
