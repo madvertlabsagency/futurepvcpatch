@@ -39,6 +39,8 @@ async function shot(page, name, opts = {}) {
 async function cap(page, text, ms = 2600) {
   await page.evaluate((t) => window.__cap(t), text).catch(() => {});
   await sleep(ms);
+  // Clear it, so a caption never stays on screen over the next step.
+  await page.evaluate(() => window.__cap('')).catch(() => {});
 }
 
 async function funnel(browser) {
@@ -175,10 +177,17 @@ async function crm(browser, code) {
 (async () => {
   if (!process.env.CRM_EMAIL || !process.env.CRM_PASSWORD) throw new Error('Set CRM_EMAIL and CRM_PASSWORD');
   const browser = await chromium.launch();
-  const f = await funnel(browser);
-  fs.writeFileSync(path.join(OUT, 'lead.json'), JSON.stringify(f, null, 2));
-  console.log('lead', f.last && f.last.code);
-  await sleep(20000); // the lead reaches the CRM a few seconds after submit
+  let f;
+  if (process.env.SKIP_FUNNEL) {
+    // CRM only, reusing the sample lead from an earlier run (no new lead on the live funnel).
+    f = JSON.parse(fs.readFileSync(path.join(OUT, 'lead.json'), 'utf8'));
+    n = 9;
+  } else {
+    f = await funnel(browser);
+    fs.writeFileSync(path.join(OUT, 'lead.json'), JSON.stringify(f, null, 2));
+    console.log('lead', f.last && f.last.code);
+    await sleep(20000); // the lead reaches the CRM a few seconds after submit
+  }
   await crm(browser, f.last && f.last.code);
   await browser.close();
 })().catch((e) => {

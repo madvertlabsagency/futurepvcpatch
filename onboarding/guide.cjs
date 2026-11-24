@@ -126,6 +126,8 @@ if (shot('crm-login'))
         'Turn on notifications so you hear a cha-ching for every new quote request.',
       ]),
   );
+if (shot('crm-welcome'))
+  add('Step 4 · Your CRM', 'Your welcome page', 'The first time you sign in, a welcome page shows your four first steps: add your team, work your pipeline, keep notes on every lead, and turn on notifications.', `<div class="one">${wide('crm-welcome', 'Your CRM welcome page')}</div>`);
 if (shot('crm-pipeline'))
   add('Step 4 · Your CRM', 'The pipeline', 'Every new quote lands in New RFQ. Move it along with the arrows as you work it: Contacted, Quote Sent, then Won or Lost.', `<div class="one">${wide('crm-pipeline', 'Your pipeline')}</div>`);
 if (shot('crm-lead'))
@@ -138,7 +140,7 @@ if (shot('crm-lead'))
   );
 if (shot('crm-dashboard')) add('Step 4 · Your CRM', 'Your dashboard', 'Your numbers at a glance: leads, pipeline value, won and lost revenue, and your conversion ratios.', `<div class="one">${wide('crm-dashboard', 'The dashboard')}</div>`);
 if (shot('crm-tasks') || shot('crm-notifications'))
-  add('Step 4 · Your CRM', 'Tasks and notifications', 'Never miss a follow-up: tasks show what is due today and overdue, and notifications flag new leads and leads waiting too long.', `<div class="two">${wide('crm-tasks', 'Tasks')}${wide('crm-notifications', 'Notifications')}</div>`);
+  add('Step 4 · Your CRM', 'Tasks and notifications', 'Never miss a follow-up: tasks show what is due today and overdue, and notifications flag new leads and leads waiting too long. Install the app and turn on notifications from this page.', `<div class="one">${wide('crm-notifications', 'Notifications: new leads, leads waiting too long, and the app and notification settings')}</div><div class="one" style="margin-top:6mm">${wide('crm-tasks', 'Tasks')}</div>`);
 if (shot('crm-team')) add('Step 4 · Your CRM', 'Your team', 'Add your salespeople with their own login. Each one sees the leads of your account only.', `<div class="one">${wide('crm-team', 'Team settings')}</div>`);
 
 add(
@@ -178,7 +180,7 @@ h2{font:800 26px/1.15 Mont,Arial;margin:9px 0 6px;letter-spacing:-.3px}
 .phones img{width:100%;border-radius:16px;border:1px solid var(--line);box-shadow:0 10px 26px rgba(11,11,18,.12);display:block}
 figcaption{font-size:11.5px;line-height:1.45;color:var(--ink);margin-top:3mm}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:7mm;align-items:start}
-.one .wide img,.two .wide img{width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:0 10px 26px rgba(11,11,18,.10);display:block;max-height:175mm;object-fit:contain;object-position:top;background:#fff}
+.one .wide img,.two .wide img{width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:0 10px 26px rgba(11,11,18,.10);display:block;max-height:175mm;object-fit:contain;object-position:top left;object-position:top;background:#fff}
 .wide{margin:0}
 .tip{margin-top:7mm;background:var(--soft);border-left:5px solid var(--blue);padding:4mm 5mm;border-radius:10px;font-size:12px;line-height:1.55}
 .tip .tl{display:block;font:700 11px Mont,Arial;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:2px}
